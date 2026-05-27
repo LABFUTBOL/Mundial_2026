@@ -3,231 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fixture Mundial 2026</title>
+    <title>LAB 26 | Mundial 2026</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
     <style>
         :root {
-            --primary: #1a237e;
-            --secondary: #ffffff;
-            --accent: #d32f2f;
-            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            --text-main: #222;
+            --primary: #0055FF; 
+            --accent: #ff0040;
+            --bg-1: #001533;
+            --bg-2: #002266;
+            --bg-3: #001a4d;
+            --glass-bg: rgba(0, 85, 255, 0.1); 
+            --glass-border: rgba(0, 85, 255, 0.2);
         }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        
         body { 
-            font-family: 'Helvetica Neue', Arial, sans-serif; 
-            background: var(--bg-gradient); 
-            color: var(--text-main); 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(160deg, var(--bg-1), var(--bg-2), var(--bg-3)); 
+            color: #ffffff; 
             min-height: 100vh; 
-            padding: 15px;
-            transition: background 0.5s ease;
+            padding: 15px; 
+            padding-bottom: 100px; 
+            transition: all 0.5s ease;
         }
+        
         .app-container { max-width: 600px; margin: 0 auto; }
-        .header {
-            background-color: var(--primary);
-            color: var(--secondary);
-            padding: 25px 20px;
-            border-radius: 16px 16px 0 0;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+            transition: all 0.5s ease;
         }
-        .header h1 { font-size: 1.6rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
-        .header p { font-size: 0.9rem; opacity: 0.9; }
-        .outfit-selector { margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .outfit-selector label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        .select-outfit {
-            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5);
-            padding: 8px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; outline: none;
+        
+        .header { padding: 30px 25px; border-radius: 24px 24px 0 0; text-align: center; border-bottom: none; }
+        .app-logo { max-width: 180px; width: 100%; height: auto; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+        
+        .outfit-selector { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+        .outfit-selector label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
+        
+        .select-outfit { 
+            background: rgba(0,0,0,0.3); color: var(--primary); border: 2px solid var(--primary);
+            padding: 8px 15px; border-radius: 30px; font-weight: 800; cursor: pointer; outline: none; font-family: inherit;
+            transition: all 0.3s ease;
         }
-        .select-outfit option { color: #333; background: white; }
-        .matches-container {
-            background: white; border-radius: 0 0 16px 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 20px;
+        .select-outfit option { color: #000; background: white; }
+
+        .matches-container { border-top: 1px solid var(--glass-border); padding: 20px; min-height: 200px; border-radius: 0; }
+        .loading { text-align: center; padding: 40px; opacity: 0.5; font-weight: 600; }
+        .error-msg { background: rgba(255,0,0,0.2); border: 1px solid red; padding: 15px; border-radius: 10px; font-size: 0.8rem; word-break: break-all;}
+        
+        /* Próximo Partido */
+        .proximo-partido { 
+            background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); border-top: 4px solid var(--primary); border-radius: 16px; padding: 25px; margin-bottom: 25px; 
+            text-align: center; transition: all 0.5s ease;
         }
-        .match-card { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; transition: transform 0.2s; }
-        .match-card:last-child { border-bottom: none; }
-        .match-card:hover { background-color: #fafafa; transform: scale(1.01); }
-        .teams-row { display: flex; justify-content: space-between; align-items: center; }
-        .team-info { display: flex; align-items: center; gap: 12px; width: 42%; }
-        .team-info.local { flex-direction: row-reverse; text-align: right; }
-        .team-info.visitante { text-align: left; }
-        .team-name { font-weight: 600; font-size: 1rem; line-height: 1.2; }
-        .team-logo { width: 35px; height: 35px; object-fit: contain; }
-        .score-box {
-            width: 16%; text-align: center; font-size: 1.4rem; font-weight: 800; color: var(--primary);
-            background: #f8f9fa; padding: 8px 5px; border-radius: 8px; border: 2px solid var(--primary);
+        .proximo-partido .fase-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 10px;}
+        .proximo-partido .fecha-hora { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; font-weight: 600; }
+        .proximo-partido .estadio-text { font-size: 0.75rem; opacity: 0.5; margin-bottom: 15px; font-weight: 400; }
+        .proximo-partido .equipos { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 800; flex-wrap: wrap;}
+        .proximo-partido .vs { font-size: 0.9rem; opacity: 0.3; font-weight: 400; color: white; }
+        
+        /* Partidos */
+        .titulo-seccion { font-size: 1rem; font-weight: 800; margin: 25px 0 15px 0; border-bottom: 2px solid var(--primary); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; color: var(--primary); transition: all 0.5s ease;}
+        
+        .match-card { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 15px; background: rgba(0, 0, 0, 0.15); 
+            border-radius: 12px; margin-bottom: 10px; border-left: 4px solid rgba(255,255,255,0.1); transition: all 0.3s ease;
         }
-        .match-details { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.75rem; color: #777; padding: 0 5px; }
-        .match-status { font-weight: bold; color: var(--accent); text-transform: uppercase; font-size: 0.7rem; margin-top: 5px; text-align: center; }
-        #loading { text-align: center; padding: 50px 20px; color: #666; }
-        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .mensaje-sistema { text-align: center; padding: 40px 20px; font-size: 1.1rem; line-height: 1.5; }
-        .mensaje-error { color: #d32f2f; font-weight: bold; }
-        .mensaje-exito { color: #2e7d32; }
+        .match-card:hover { background: rgba(0, 0, 0, 0.25); transform: translateX(3px); }
+        .match-card.jugado { border-left-color: #00cc66; }
+        .match-card.pendiente { border-left-color: var(--primary); }
+        
+        /* AJUSTE DE ESPACIO PARA NOMBRES LARGOS Y MARCADORES */
+        .match-equipos { 
+            font-weight: 700; 
+            font-size: 0.85rem; /* Reducido para dar espacio */
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* Centra si hay salto de línea */
+            flex-wrap: wrap; /* Permite que el marcador baje si no hay espacio */
+            gap: 4px; 
+        }
+        
+        .match-resultado { 
+            font-weight: 800; 
+            font-size: 1rem; 
+            color: var(--primary); 
+            margin: 0 6px; /* Márgenes reducidos */
+            min-width: 45px; /* ESPACIO PROTEGIDO: Siempre hay lugar para "10 - 10" */
+            text-align: center; 
+            transition: all 0.5s ease; 
+            display: inline-block;
+        }
+
+        .match-fecha { font-size: 0.7rem; opacity: 0.6; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;}
+        
+        .fase-destacada { 
+            color: var(--primary); 
+            font-weight: 800; 
+            font-size: 0.8rem;
+            margin-right: 5px;
+            transition: color 0.5s ease;
+        }
+
+        /* Tabla de Posiciones */
+        .posiciones-container { padding: 20px; border-radius: 0 0 24px 24px; border-top: 1px solid var(--glass-border); }
+        .grupo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        
+        .tabla-grupo { font-size: 0.75rem; background: rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .tabla-grupo h3 { background: var(--primary); color: #000; padding: 8px; text-align: center; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: background 0.5s ease; }
+        .tabla-grupo table { width: 100%; border-collapse: collapse; }
+        .tabla-grupo th, .tabla-grupo td { padding: 8px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .tabla-grupo th { font-size: 0.6rem; opacity: 0.5; text-transform: uppercase; color: white; }
+        .tabla-grupo td.equipo { text-align: left; font-weight: 600; padding-left: 10px; }
+        .tabla-grupo tr.clasificado td { color: #00ff88; font-weight: 700;}
+        .tabla-grupo tr.clasificado { background-color: rgba(0, 255, 136, 0.05); }
+        
+        /* Botón Flotante QR */
+        .fab-qr {
+            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
+            background: var(--primary); color: #000000; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
+            transition: all 0.3s ease; border: none;
+        }
+        .fab-qr:hover { transform: scale(1.1); }
+        .fab-qr svg { width: 30px; height: 30px; fill: currentColor; }
+
+        /* Ventana Modal QR */
+        .qr-modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000;
+            justify-content: center; align-items: center;
+        }
+        .qr-modal.active { display: flex; }
+        .qr-modal-content {
+            background: white; padding: 30px; border-radius: 24px; text-align: center;
+            color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.3s ease;
+        }
+        .qr-modal-content h3 { margin-bottom: 20px; font-size: 1.1rem; color: #111; }
+        .qr-modal-content p { margin-top: 15px; font-size: 0.75rem; color: #888; }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @media (max-width: 400px) {
+            .grupo-grid { grid-template-columns: 1fr; }
+            .proximo-partido .equipos { font-size: 1.1rem; gap: 8px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div class="header">
-            <h1>World Cup 2026</h1>
-            <p>Fixture y Resultados en Vivo</p>
-            <div class="outfit-selector">
-                <label for="color-picker">Vísteme con:</label>
-                <select id="color-picker" class="select-outfit" onchange="aplicarOutfit(this.value)">
-                    <option value="default">🏆 FIFA Oficial</option>
-                    <option value="argentina">🇦🇷 Argentina</option>
-                    <option value="mexico">🇲🇽 México</option>
-                    <option value="brasil">🇧🇷 Brasil</option>
-                    <option value="espana">🇪🇸 España</option>
-                    <option value="usa">🇺🇸 Estados Unidos</option>
-                    <option value="francia">🇫🇷 Francia</option>
-                    <option value="alemania">🇩🇪 Alemania</option>
-                    <option value="inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</option>
-                    <option value="colombia">🇨🇴 Colombia</option>
-                    <option value="japon">🇯🇵 Japón</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="matches-container">
-            <div id="loading"><div class="spinner"></div>Conectando con el estadio...</div>
-            <div id="matches"></div>
+<div class="app-container">
+    <div class="header glass">
+        <img src="logo_lab_26.png" alt="LAB 26 Logo" class="app-logo">
+        <div class="outfit-selector">
+            <label>Viste tu app:</label>
+            <select class="select-outfit" id="selector-outfit" onchange="cambiarOutfit(this.value)">
+                <option value="fifa" selected>FIFA</option>
+                <option value="argentina">🇦🇷 Argentina</option>
+                <option value="brasil">🇧🇷 Brasil</option>
+                <option value="mexico">🇲🇽 México</option>
+                <option value="espana">🇪🇸 España</option>
+                <option value="francia">🇫🇷 Francia</option>
+                <option value="alemania">🇩🇪 Alemania</option>
+                <option value="inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</option>
+                <option value="holanda">🇳🇱 Holanda</option>
+                <option value="eeuu">🇺🇸 Estados Unidos</option>
+                <option value="uruguay">🇺🇾 Uruguay</option>
+            </select>
         </div>
     </div>
 
-    <script>
-        // NUEVA LLAVE DE FOOTBALL-DATA.ORG
-        const API_KEY = '4fa760918b7f467580a5f42acaa6d751'; 
-        
-        // URL directa al Mundial 2026
-        const URL_API = 'https://api.football-data.org/v4/competitions/WC/matches?season=2026';
+    <div class="matches-container glass" id="contenedor-partidos">
+        <div class="loading">Cargando datos del Mundial...</div>
+    </div>
 
-        const opciones = {
-            method: 'GET',
-            headers: { 'X-Auth-Token': API_KEY }
-        };
+    <div class="posiciones-container glass" id="contenedor-posiciones"></div>
+</div>
 
-        const disenos = {
-            default:   { p: '#1a237e', s: '#ffffff', a: '#d32f2f', bg: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' },
-            argentina: { p: '#74acdf', s: '#ffffff', a: '#74acdf', bg: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)' },
-            mexico:    { p: '#006847', s: '#ffffff', a: '#ce1126', bg: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)' },
-            brasil:    { p: '#009c3b', s: '#ffdf00', a: '#002776', bg: 'linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%)' },
-            espana:    { p: '#c60b1e', s: '#ffc400', a: '#c60b1e', bg: 'linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%)' },
-            usa:       { p: '#3c3b6e', s: '#ffffff', a: '#b22234', bg: 'linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%)' },
-            francia:   { p: '#002395', s: '#ffffff', a: '#ed2939', bg: 'linear-gradient(135deg, #e8eaf6 0%, #9fa8da 100%)' },
-            alemania:  { p: '#000000', s: '#ffffff', a: '#dd0000', bg: 'linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%)' },
-            inglaterra:{ p: '#ffffff', s: '#cf081f', a: '#cf081f', bg: 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)' },
-            colombia:  { p: '#fcd116', s: '#003893', a: '#ce1126', bg: 'linear-gradient(135deg, #fffde7 0%, #fff9c4 100%)' },
-            japon:     { p: '#000080', s: '#ffffff', a: '#bc002d', bg: 'linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%)' }
-        };
+<!-- Botón Flotante QR -->
+<button class="fab-qr" onclick="toggleQR()">
+    <svg viewBox="0 0 24 24">
+        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM17 17h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2zM17 13h2v2h-2zM19 15h2v2h-2z"/>
+    </svg>
+</button>
 
-        function aplicarOutfit(equipo) {
-            const estilo = disenos[equipo];
-            if (!estilo) return;
-            const root = document.documentElement;
-            root.style.setProperty('--primary', estilo.p);
-            root.style.setProperty('--secondary', estilo.s);
-            root.style.setProperty('--accent', estilo.a);
-            root.style.setProperty('--bg-gradient', estilo.bg);
-            localStorage.setItem('outfit_mundial', equipo);
+<!-- Ventana Emergente QR -->
+<div class="qr-modal" id="qr-modal" onclick="cerrarQR(event)">
+    <div class="qr-modal-content">
+        <h3>Compartir con amigos</h3>
+        <div id="qr-code"></div>
+        <p>Tocá fuera para cerrar</p>
+    </div>
+</div>
+
+<script>
+    const outfits = {
+        fifa:      { p: '#0055FF', rgb: '0, 85, 255',    bg1: '#001533', bg2: '#002266', bg3: '#001a4d' },
+        argentina: { p: '#75AADB', rgb: '117, 170, 219', bg1: '#0a2540', bg2: '#0f3050', bg3: '#0a2a45' },
+        brasil:    { p: '#FFDF00', rgb: '255, 223, 0',   bg1: '#0a2a00', bg2: '#154000', bg3: '#0f3300' },
+        mexico:    { p: '#006847', rgb: '0, 104, 71',    bg1: '#0a1f15', bg2: '#0f2d1f', bg3: '#0a261a' },
+        espana:    { p: '#EE3018', rgb: '238, 48, 24',   bg1: '#2a0a05', bg2: '#3d100a', bg3: '#300d08' },
+        francia:   { p: '#002395', rgb: '0, 35, 149',    bg1: '#000a20', bg2: '#001035', bg3: '#000d2a' },
+        alemania:  { p: '#FFFFFF', rgb: '255, 255, 255', bg1: '#0a0a0a', bg2: '#151515', bg3: '#101010' },
+        inglaterra:{ p: '#CF081F', rgb: '207, 8, 31',    bg1: '#200005', bg2: '#30000a', bg3: '#280008' },
+        holanda:   { p: '#FF6600', rgb: '255, 102, 0',   bg1: '#2a1200', bg2: '#3d1a00', bg3: '#331500' },
+        eeuu:      { p: '#002868', rgb: '0, 40, 104',    bg1: '#000815', bg2: '#001025', bg3: '#000a1c' },
+        uruguay:   { p: '#5CADFF', rgb: '92, 173, 255',  bg1: '#0a1e35', bg2: '#0f2a45', bg3: '#0a233d' }
+    };
+
+    function initOutfit() {
+        let guardado = localStorage.getItem('lab26_outfit');
+        if (!guardado || !outfits[guardado]) { guardado = 'fifa'; document.getElementById('selector-outfit').value = 'fifa'; }
+        aplicarCSS(guardado);
+    }
+    function cambiarOutfit(equipo) { localStorage.setItem('lab26_outfit', equipo); aplicarCSS(equipo); }
+    function aplicarCSS(equipo) {
+        const o = outfits[equipo]; const root = document.documentElement.style;
+        root.setProperty('--primary', o.p); root.setProperty('--bg-1', o.bg1); root.setProperty('--bg-2', o.bg2); root.setProperty('--bg-3', o.bg3);
+        root.setProperty('--glass-bg', `rgba(${o.rgb}, 0.1)`);
+        root.setProperty('--glass-border', `rgba(${o.rgb}, 0.2)`);
+    }
+    initOutfit();
+
+    const URL_SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS_W625S823fGRqWxPfro9r0tKV1nvgeR29B2VMHYDISEb2gqPlMzMCAlBEbFRSi0JNnrFfZo4939Xj/pub?output=csv';
+    const COL = { FASE: 0, LOCAL: 1, BANDERA_LOCAL: 2, VISITANTE: 3, BANDERA_VISIT: 4, FECHA: 5, ESTADIO: 6, GL: 7, GV: 8 };
+
+    let partidos = [];
+    let proximoPartidoId = null;
+    let qrCreado = false;
+
+    fetch(URL_SHEET)
+        .then(res => { if (!res.ok) throw new Error("Error de red: " + res.status); return res.text(); })
+        .then(data => { procesarDatosCSV(data); renderVista(); })
+        .catch(err => {
+            document.getElementById('contenedor-partidos').innerHTML = `<div class="error-msg"><strong>Ocurrió un problema:</strong><br><br>${err.message}<br><br><small>(Copiá este texto y mandalo al dev)</small></div>`;
+        });
+
+    function parsearLineaCSV(linea) {
+        const resultado = []; let estadoActual = 0; let valorActual = '';
+        for (let i = 0; i < linea.length; i++) {
+            let caracter = linea[i];
+            if (caracter === '"') {
+                if (estadoActual === 1 && linea[i+1] === '"') { valorActual += '"'; i++; }
+                else { estadoActual = (estadoActual === 0) ? 1 : 0; }
+            } else if (caracter === ',' && estadoActual === 0) {
+                resultado.push(valorActual.trim()); valorActual = '';
+            } else { valorActual += caracter; }
         }
+        resultado.push(valorActual.trim()); return resultado;
+    }
 
-        async function obtenerPartidos() {
-            const contenedor = document.getElementById('matches');
-            const cargador = document.getElementById('loading');
+    function procesarDatosCSV(texto) {
+        const filas = texto.trim().split(/\r?\n/);
+        for (let i = 1; i < filas.length; i++) {
+            let col = parsearLineaCSV(filas[i]);
+            if(!col[COL.FECHA]) continue;
+            
+            let nombreLocal = col[COL.BANDERA_LOCAL] + ' ' + col[COL.LOCAL];
+            let nombreVisitante = col[COL.BANDERA_VISIT] + ' ' + col[COL.VISITANTE];
+            let faseOriginal = col[COL.FASE].trim(); 
+            let grupo = faseOriginal.includes('GRUPO') ? faseOriginal.replace('GRUPO ', '') : null;
 
-            try {
-                if (API_KEY === 'PEGA_TU_NUEVA_LLAVE_AQUI') {
-                    cargador.style.display = 'none';
-                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">🚫 Olvidaste pegar tu nueva llave de Football-Data.org dentro del código.</div>`;
-                    return;
-                }
-
-                const respuesta = await fetch(URL_API, opciones);
-                
-                // Si la llave es mala, esta API devuelve un error 403
-                if (respuesta.status === 403) {
-                    cargador.style.display = 'none';
-                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">🚫 La llave fue rechazada. Asegúrate de copiar bien el token de Football-Data.org</div>`;
-                    return;
-                }
-
-                const datos = await respuesta.json();
-                cargador.style.display = 'none';
-
-                if (datos.matches && datos.matches.length === 0) {
-                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-exito">✅ ¡Conexión exitosa! Tu app funciona PERFECTO.<br><br>Pero la base de datos todavía no tiene los horarios oficiales del 2026. En cuanto se juegue el sorteo final, aparecerán aquí solitos.</div>`;
-                    return;
-                }
-
-                if (datos.matches) {
-                    dibujarPartidos(datos.matches);
-                } else {
-                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">Error inesperado en los datos.</div>`;
-                }
-
-            } catch (error) {
-                cargador.style.display = 'none';
-                contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">⚠️ Error de red.</div>`;
-            }
-        }
-
-        function dibujarPartidos(partidos) {
-            const contenedor = document.getElementById('matches');
-            let html = '';
-
-            partidos.forEach(partido => {
-                const local = partido.homeTeam;
-                const visitante = partido.awayTeam;
-                
-                let marcador = "VS";
-                let estadoTexto = partido.status;
-                
-                // Si el estado no es "SCHEDULED" (Programado), ponemos goles
-                if (estadoTexto !== 'SCHEDULED' && estadoTexto !== 'TIMED') {
-                    marcador = `${partido.score.fullTime.home} - ${partido.score.fullTime.away}`;
-                } else {
-                    estadoTexto = "Por jugar";
-                }
-
-                const fecha = new Date(partido.utcDate).toLocaleString('es-ES', { 
-                    weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
-                });
-
-                html += `
-                    <div class="match-card">
-                        <div class="teams-row">
-                            <div class="team-info local">
-                                <span class="team-name">${local.name}</span>
-                                <img src="${local.crest}" alt="${local.name}" class="team-logo" onerror="this.src='https://via.placeholder.com/35?text=⚽'">
-                            </div>
-                            <div class="score-box">${marcador}</div>
-                            <div class="team-info visitante">
-                                <img src="${visitante.crest}" alt="${visitante.name}" class="team-logo" onerror="this.src='https://via.placeholder.com/35?text=⚽'">
-                                <span class="team-name">${visitante.name}</span>
-                            </div>
-                        </div>
-                        <div class="match-details">
-                            <span>${fecha}hs</span>
-                            <span>${local.name} vs ${visitante.name}</span>
-                        </div>
-                        <div class="match-status">${estadoTexto}</div>
-                    </div>
-                `;
+            let gl = col[COL.GL] !== '' ? parseInt(col[COL.GL]) : null;
+            let gv = col[COL.GV] !== '' ? parseInt(col[COL.GV]) : null;
+            let jugado = (gl !== null && gv !== null);
+            let fechaDate = new Date(col[COL.FECHA]);
+            
+            partidos.push({ 
+                fecha: fechaDate, fechaStr: formatearFecha(col[COL.FECHA]), estadio: col[COL.ESTADIO], 
+                fase: faseOriginal, grupo: grupo,
+                local: nombreLocal, localLimpio: col[COL.LOCAL], gl: gl, 
+                visitante: nombreVisitante, visitLimpio: col[COL.VISITANTE], gv: gv, jugado: jugado, id: i 
             });
+        }
+        partidos.sort((a, b) => a.fecha - b.fecha);
+        for (let p of partidos) { if (!p.jugado) { proximoPartidoId = p.id; break; } }
+    }
 
-            contenedor.innerHTML = html;
+    function formatearFecha(fechaStr) {
+        let d = new Date(fechaStr);
+        return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
+    }
+
+    function renderVista() {
+        let htmlProximo = ''; let htmlPartidos = '';
+
+        if (proximoPartidoId !== null) {
+            let pp = partidos.find(p => p.id === proximoPartidoId);
+            htmlProximo = `
+                <div class="proximo-partido">
+                    <div class="fase-label">Próximo Partido - ${pp.fase}</div>
+                    <div class="fecha-hora">${pp.fechaStr}</div>
+                    <div class="estadio-text">📍 ${pp.estadio}</div>
+                    <div class="equipos">
+                        <span>${pp.local}</span>
+                        <span class="vs">VS</span>
+                        <span>${pp.visitante}</span>
+                    </div>
+                </div>`;
         }
 
-        window.onload = () => {
-            const outfitGuardado = localStorage.getItem('outfit_mundial');
-            if (outfitGuardado) {
-                document.getElementById('color-picker').value = outfitGuardado;
-                aplicarOutfit(outfitGuardado);
-            }
-            obtenerPartidos();
-        };
-    </script>
+        htmlPartidos += '<div class="titulo-seccion">⚽ Fixture Completo</div>';
+        for (let p of partidos) {
+            let estadoClase = p.jugado ? 'match-card jugado' : 'match-card pendiente';
+            let resultado = p.jugado ? `${p.gl} - ${p.gv}` : '- ';
+            
+            htmlPartidos += `
+                <div class="${estadoClase}">
+                    <div class="match-info">
+                        <div class="match-equipos">${p.local} <span class="match-resultado">${resultado}</span> ${p.visitante}</div>
+                        <div class="match-fecha">
+                            <span class="fase-destacada">${p.fase}</span> | ${p.fechaStr} | ${p.estadio}
+                        </div>
+                    </div>
+                </div>`;
+        }
+        document.getElementById('contenedor-partidos').innerHTML = htmlProximo + htmlPartidos;
+        renderPosiciones();
+    }
+
+    function renderPosiciones() {
+        const grupos = {}; const ordenGrupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        ordenGrupos.forEach(g => grupos[g] = []);
+        
+        partidos.filter(p => p.jugado && p.grupo !== null).forEach(p => {
+            agregarResultado(grupos[p.grupo], p.localLimpio, p.local, p.gl, p.gv);
+            agregarResultado(grupos[p.grupo], p.visitLimpio, p.visitante, p.gv, p.gl);
+        });
+
+        let hayDatos = Object.values(grupos).some(g => g.length > 0);
+        if (!hayDatos) { document.getElementById('contenedor-posiciones').innerHTML = ''; return; }
+
+        let html = '<div class="titulo-seccion">🏆 Posiciones (Clasifican en verde)</div><div class="grupo-grid">';
+        ordenGrupos.forEach(nombreGrupo => {
+            let equipos = grupos[nombreGrupo];
+            equipos.sort((a, b) => { if (b.pts !== a.pts) return b.pts - a.pts; return (b.gf - b.gc) - (a.gf - a.gc); });
+
+            html += `<div class="tabla-grupo"><h3>Grupo ${nombreGrupo}</h3><table><tr><th>#</th><th>Equipo</th><th>Pts</th><th>DG</th></tr>`;
+            equipos.forEach((eq, index) => {
+                let dg = eq.gf - eq.gc; let claseCss = index < 2 ? 'clasificado' : '';
+                html += `<tr class="${claseCss}"><td>${index + 1}</td><td class="equipo">${eq.nombreCompleto}</td><td><strong>${eq.pts}</strong></td><td>${dg > 0 ? '+'+dg : dg}</td></tr>`;
+            });
+            html += '</table></div>';
+        });
+        html += '</div>';
+        document.getElementById('contenedor-posiciones').innerHTML = html;
+    }
+
+    function agregarResultado(arrGrupo, nombreLimpio, nombreCompleto, gf, gc) {
+        let equipo = arrGrupo.find(e => e.nombre === nombreLimpio);
+        if (!equipo) { arrGrupo.push({ nombre: nombreLimpio, nombreCompleto: nombreCompleto, pts: 0, pj: 0, gf: 0, gc: 0 }); equipo = arrGrupo.find(e => e.nombre === nombreLimpio); }
+        equipo.pj++; equipo.gf += gf; equipo.gc += gc;
+        if (gf > gc) equipo.pts += 3; else if (gf === gc) equipo.pts += 1;
+    }
+
+    // --- LÓGICA DEL MODAL QR ---
+    function toggleQR() {
+        const modal = document.getElementById('qr-modal');
+        modal.classList.add('active');
+        if (!qrCreado) {
+            new QRCode(document.getElementById('qr-code'), { text: window.location.href, width: 180, height: 180, colorDark : "#000000", colorLight : "#ffffff" });
+            qrCreado = true;
+        }
+    }
+
+    function cerrarQR(event) {
+        if (event.target.id === 'qr-modal') {
+            document.getElementById('qr-modal').classList.remove('active');
+        }
+    }
+</script>
+
 </body>
 </html>
