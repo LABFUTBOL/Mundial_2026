@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixture Mundial 2026</title>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #ffffff;
+            --accent: #d32f2f;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --text-main: #222;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Helvetica Neue', Arial, sans-serif; 
+            background: var(--bg-gradient); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            padding: 15px;
+            transition: background 0.5s ease;
+        }
+        .app-container { max-width: 600px; margin: 0 auto; }
+        .header {
+            background-color: var(--primary);
+            color: var(--secondary);
+            padding: 25px 20px;
+            border-radius: 16px 16px 0 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .header h1 { font-size: 1.6rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; }
+        .header p { font-size: 0.9rem; opacity: 0.9; }
+        .outfit-selector { margin-top: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .outfit-selector label { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .select-outfit {
+            background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.5);
+            padding: 8px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; outline: none;
+        }
+        .select-outfit option { color: #333; background: white; }
+        .matches-container {
+            background: white; border-radius: 0 0 16px 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; padding-bottom: 20px;
+        }
+        .match-card { padding: 15px 20px; border-bottom: 1px solid #f0f0f0; transition: transform 0.2s; }
+        .match-card:last-child { border-bottom: none; }
+        .match-card:hover { background-color: #fafafa; transform: scale(1.01); }
+        .teams-row { display: flex; justify-content: space-between; align-items: center; }
+        .team-info { display: flex; align-items: center; gap: 12px; width: 42%; }
+        .team-info.local { flex-direction: row-reverse; text-align: right; }
+        .team-info.visitante { text-align: left; }
+        .team-name { font-weight: 600; font-size: 1rem; line-height: 1.2; }
+        .team-logo { width: 35px; height: 35px; object-fit: contain; }
+        .score-box {
+            width: 16%; text-align: center; font-size: 1.4rem; font-weight: 800; color: var(--primary);
+            background: #f8f9fa; padding: 8px 5px; border-radius: 8px; border: 2px solid var(--primary);
+        }
+        .match-details { display: flex; justify-content: space-between; margin-top: 10px; font-size: 0.75rem; color: #777; padding: 0 5px; }
+        .match-status { font-weight: bold; color: var(--accent); text-transform: uppercase; font-size: 0.7rem; margin-top: 5px; text-align: center; }
+        #loading { text-align: center; padding: 50px 20px; color: #666; }
+        .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--primary); border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 0 auto 15px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .mensaje-sistema { text-align: center; padding: 40px 20px; font-size: 1.1rem; line-height: 1.5; }
+        .mensaje-error { color: #d32f2f; font-weight: bold; }
+        .mensaje-exito { color: #2e7d32; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <h1>World Cup 2026</h1>
+            <p>Fixture y Resultados en Vivo</p>
+            <div class="outfit-selector">
+                <label for="color-picker">Vísteme con:</label>
+                <select id="color-picker" class="select-outfit" onchange="aplicarOutfit(this.value)">
+                    <option value="default">🏆 FIFA Oficial</option>
+                    <option value="argentina">🇦🇷 Argentina</option>
+                    <option value="mexico">🇲🇽 México</option>
+                    <option value="brasil">🇧🇷 Brasil</option>
+                    <option value="espana">🇪🇸 España</option>
+                    <option value="usa">🇺🇸 Estados Unidos</option>
+                    <option value="francia">🇫🇷 Francia</option>
+                    <option value="alemania">🇩🇪 Alemania</option>
+                    <option value="inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</option>
+                    <option value="colombia">🇨🇴 Colombia</option>
+                    <option value="japon">🇯🇵 Japón</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="matches-container">
+            <div id="loading"><div class="spinner"></div>Conectando con el estadio...</div>
+            <div id="matches"></div>
+        </div>
+    </div>
+
+    <script>
+        // NUEVA LLAVE DE FOOTBALL-DATA.ORG
+        const API_KEY = '4fa760918b7f467580a5f42acaa6d751'; 
+        
+        // URL directa al Mundial 2026
+        const URL_API = 'https://api.football-data.org/v4/competitions/WC/matches?season=2026';
+
+        const opciones = {
+            method: 'GET',
+            headers: { 'X-Auth-Token': API_KEY }
+        };
+
+        const disenos = {
+            default:   { p: '#1a237e', s: '#ffffff', a: '#d32f2f', bg: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)' },
+            argentina: { p: '#74acdf', s: '#ffffff', a: '#74acdf', bg: 'linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%)' },
+            mexico:    { p: '#006847', s: '#ffffff', a: '#ce1126', bg: 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)' },
+            brasil:    { p: '#009c3b', s: '#ffdf00', a: '#002776', bg: 'linear-gradient(135deg, #f1f8e9 0%, #dcedc8 100%)' },
+            espana:    { p: '#c60b1e', s: '#ffc400', a: '#c60b1e', bg: 'linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%)' },
+            usa:       { p: '#3c3b6e', s: '#ffffff', a: '#b22234', bg: 'linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%)' },
+            francia:   { p: '#002395', s: '#ffffff', a: '#ed2939', bg: 'linear-gradient(135deg, #e8eaf6 0%, #9fa8da 100%)' },
+            alemania:  { p: '#000000', s: '#ffffff', a: '#dd0000', bg: 'linear-gradient(135deg, #eceff1 0%, #cfd8dc 100%)' },
+            inglaterra:{ p: '#ffffff', s: '#cf081f', a: '#cf081f', bg: 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)' },
+            colombia:  { p: '#fcd116', s: '#003893', a: '#ce1126', bg: 'linear-gradient(135deg, #fffde7 0%, #fff9c4 100%)' },
+            japon:     { p: '#000080', s: '#ffffff', a: '#bc002d', bg: 'linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%)' }
+        };
+
+        function aplicarOutfit(equipo) {
+            const estilo = disenos[equipo];
+            if (!estilo) return;
+            const root = document.documentElement;
+            root.style.setProperty('--primary', estilo.p);
+            root.style.setProperty('--secondary', estilo.s);
+            root.style.setProperty('--accent', estilo.a);
+            root.style.setProperty('--bg-gradient', estilo.bg);
+            localStorage.setItem('outfit_mundial', equipo);
+        }
+
+        async function obtenerPartidos() {
+            const contenedor = document.getElementById('matches');
+            const cargador = document.getElementById('loading');
+
+            try {
+                if (API_KEY === 'PEGA_TU_NUEVA_LLAVE_AQUI') {
+                    cargador.style.display = 'none';
+                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">🚫 Olvidaste pegar tu nueva llave de Football-Data.org dentro del código.</div>`;
+                    return;
+                }
+
+                const respuesta = await fetch(URL_API, opciones);
+                
+                // Si la llave es mala, esta API devuelve un error 403
+                if (respuesta.status === 403) {
+                    cargador.style.display = 'none';
+                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">🚫 La llave fue rechazada. Asegúrate de copiar bien el token de Football-Data.org</div>`;
+                    return;
+                }
+
+                const datos = await respuesta.json();
+                cargador.style.display = 'none';
+
+                if (datos.matches && datos.matches.length === 0) {
+                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-exito">✅ ¡Conexión exitosa! Tu app funciona PERFECTO.<br><br>Pero la base de datos todavía no tiene los horarios oficiales del 2026. En cuanto se juegue el sorteo final, aparecerán aquí solitos.</div>`;
+                    return;
+                }
+
+                if (datos.matches) {
+                    dibujarPartidos(datos.matches);
+                } else {
+                    contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">Error inesperado en los datos.</div>`;
+                }
+
+            } catch (error) {
+                cargador.style.display = 'none';
+                contenedor.innerHTML = `<div class="mensaje-sistema mensaje-error">⚠️ Error de red.</div>`;
+            }
+        }
+
+        function dibujarPartidos(partidos) {
+            const contenedor = document.getElementById('matches');
+            let html = '';
+
+            partidos.forEach(partido => {
+                const local = partido.homeTeam;
+                const visitante = partido.awayTeam;
+                
+                let marcador = "VS";
+                let estadoTexto = partido.status;
+                
+                // Si el estado no es "SCHEDULED" (Programado), ponemos goles
+                if (estadoTexto !== 'SCHEDULED' && estadoTexto !== 'TIMED') {
+                    marcador = `${partido.score.fullTime.home} - ${partido.score.fullTime.away}`;
+                } else {
+                    estadoTexto = "Por jugar";
+                }
+
+                const fecha = new Date(partido.utcDate).toLocaleString('es-ES', { 
+                    weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
+                });
+
+                html += `
+                    <div class="match-card">
+                        <div class="teams-row">
+                            <div class="team-info local">
+                                <span class="team-name">${local.name}</span>
+                                <img src="${local.crest}" alt="${local.name}" class="team-logo" onerror="this.src='https://via.placeholder.com/35?text=⚽'">
+                            </div>
+                            <div class="score-box">${marcador}</div>
+                            <div class="team-info visitante">
+                                <img src="${visitante.crest}" alt="${visitante.name}" class="team-logo" onerror="this.src='https://via.placeholder.com/35?text=⚽'">
+                                <span class="team-name">${visitante.name}</span>
+                            </div>
+                        </div>
+                        <div class="match-details">
+                            <span>${fecha}hs</span>
+                            <span>${local.name} vs ${visitante.name}</span>
+                        </div>
+                        <div class="match-status">${estadoTexto}</div>
+                    </div>
+                `;
+            });
+
+            contenedor.innerHTML = html;
+        }
+
+        window.onload = () => {
+            const outfitGuardado = localStorage.getItem('outfit_mundial');
+            if (outfitGuardado) {
+                document.getElementById('color-picker').value = outfitGuardado;
+                aplicarOutfit(outfitGuardado);
+            }
+            obtenerPartidos();
+        };
+    </script>
+</body>
+</html>
