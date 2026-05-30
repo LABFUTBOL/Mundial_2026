@@ -281,9 +281,11 @@
             let faseOriginal = col[COL.FASE].trim(); 
             let grupo = faseOriginal.includes('GRUPO') ? faseOriginal.replace('GRUPO ', '') : null;
 
-            let gl = col[COL.GL] !== '' ? parseInt(col[COL.GL]) : null;
-            let gv = col[COL.GV] !== '' ? parseInt(col[COL.GV]) : null;
-            let jugado = (gl !== null && gv !== null);
+            let glStr = col[COL.GL] ? col[COL.GL].trim() : '';
+            let gvStr = col[COL.GV] ? col[COL.GV].trim() : '';
+            let gl = glStr !== '' ? parseInt(glStr) : null;
+            let gv = gvStr !== '' ? parseInt(gvStr) : null;
+            let jugado = (gl !== null && gv !== null && !isNaN(gl) && !isNaN(gv) && gl >= 0 && gv >= 0);
             let fechaDate = new Date(col[COL.FECHA]);
             
             partidos.push({ 
