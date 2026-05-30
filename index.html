@@ -127,6 +127,8 @@
         .tabla-grupo th { font-size: 0.6rem; opacity: 0.5; text-transform: uppercase; color: white; }
         .tabla-grupo td.equipo { text-align: left; font-weight: 600; padding-left: 10px; }
         .tabla-grupo tr.clasificado td { color: #00ff88; font-weight: 700;}
+        .tabla-grupo tr.clasificado-tercero td { color: #FFD700; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);}
+        .tabla-grupo tr.clasificado-tercero { background-color: rgba(255, 215, 0, 0.05); }
         .tabla-grupo tr.clasificado { background-color: rgba(0, 255, 136, 0.05); }
         
         /* Botón Flotante QR */
@@ -337,10 +339,11 @@
         renderPosiciones();
     }
 
-    function renderPosiciones() {
-        const grupos = {}; const ordenGrupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+        function renderPosiciones() {
+        const grupos = {}; const ordenGrupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
         ordenGrupos.forEach(g => grupos[g] = []);
         
+        // 1. Calculamos los puntos de todos
         partidos.filter(p => p.jugado && p.grupo !== null).forEach(p => {
             agregarResultado(grupos[p.grupo], p.localLimpio, p.local, p.gl, p.gv);
             agregarResultado(grupos[p.grupo], p.visitLimpio, p.visitante, p.gv, p.gl);
@@ -349,14 +352,56 @@
         let hayDatos = Object.values(grupos).some(g => g.length > 0);
         if (!hayDatos) { document.getElementById('contenedor-posiciones').innerHTML = ''; return; }
 
-        let html = '<div class="titulo-seccion">🏆 Posiciones (Clasifican en verde)</div><div class="grupo-grid">';
+        // 2. LA NUEVA MATEMÁTICA: Encontrar a los 8 mejores terceros
+        const mejoresTerceros = new Set();
+        let todosLosTerceros = [];
+        
         ordenGrupos.forEach(nombreGrupo => {
             let equipos = grupos[nombreGrupo];
+            if(equipos.length > 0) {
+                // Ordenamos el grupo temporalmente para saber quién es el 3ro
+                equipos.sort((a, b) => { if (b.pts !== a.pts) return b.pts - a.pts; return (b.gf - b.gc) - (a.gf - a.gc); });
+                if(equipos[2]) {
+                    todosLosTerceros.push(equipos[2]);
+                }
+            }
+        });
+
+        // Ordenamos a todos los terceros entre sí usando las reglas de la FIFA
+        todosLosTerceros.sort((a, b) => {
+            if (b.pts !== a.pts) return b.pts - a.pts; // 1. Más puntos
+            let difB = b.gf - b.gc; let difA = a.gf - a.gc;
+            if (difB !== difA) return difB - difA; // 2. Mejor diferencia de gol
+            if (b.gf !== a.gf) return b.gf - a.gf; // 3. Más goles a favor
+            return 0; // (Si empatan todo, la FIFA sorts cards, pero aquí dejamos empate)
+        });
+
+        // Guardamos los nombres de los 8 mejores terceros
+        for(let i = 0; i < Math.min(8, todosLosTerceros.length); i++) {
+            mejoresTerceros.add(todosLosTerceros[i].nombre);
+        }
+
+        // 3. DIBUJAMOS LAS TABLAS EN PANTALLA
+        let html = '<div class="titulo-seccion">🏆 Posiciones <span style="font-size:0.7rem; opacity:0.7">(🟢 Directo | 🟡 Mejor 3ro)</span></div><div class="grupo-grid">';
+        
+        ordenGrupos.forEach(nombreGrupo => {
+            let equipos = grupos[nombreGrupo];
+            if(equipos.length === 0) return; // No mostramos grupos vacíos
+            
             equipos.sort((a, b) => { if (b.pts !== a.pts) return b.pts - a.pts; return (b.gf - b.gc) - (a.gf - a.gc); });
 
             html += `<div class="tabla-grupo"><h3>Grupo ${nombreGrupo}</h3><table><tr><th>#</th><th>Equipo</th><th>Pts</th><th>DG</th></tr>`;
             equipos.forEach((eq, index) => {
-                let dg = eq.gf - eq.gc; let claseCss = index < 2 ? 'clasificado' : '';
+                let dg = eq.gf - eq.gc; 
+                let claseCss = '';
+                
+                // Lógica de colores
+                if (index < 2) {
+                    claseCss = 'clasificado'; // Verde para 1ro y 2do
+                } else if (index === 2 && mejoresTerceros.has(eq.nombre)) {
+                    claseCss = 'clasificado-tercero'; // Amarillo para el mejor 3ro
+                }
+                
                 html += `<tr class="${claseCss}"><td>${index + 1}</td><td class="equipo">${eq.nombreCompleto}</td><td><strong>${eq.pts}</strong></td><td>${dg > 0 ? '+'+dg : dg}</td></tr>`;
             });
             html += '</table></div>';
