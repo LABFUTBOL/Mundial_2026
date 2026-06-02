@@ -1,0 +1,16 @@
+{
+  "name": "Mundial 2026",
+  "short_name": "Mundial 26",
+  "description": "Fixture y resultados del Mundial 2026",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#001533",
+  "theme_color": "#0055FF",
+  "icons": [
+    {
+      "src": "logo_lab_26.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
