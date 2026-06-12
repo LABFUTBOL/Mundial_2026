@@ -1,40 +1,47 @@
-const CACHE_NAME = 'mundial-2026-v3'; // Cambié a v3 para forzar la actualización
+const CACHE_NAME = 'mundial-2026-v4'; // Lo cambiamos a v4 para que borre el viejo
 
-// INSTALACIÓN: Borra cachés viejas y guarda la nueva
 self.addEventListener('install', event => {
+  // Borra versiones viejas y guarda lo básico
   event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName); // ¡Borra la versión vieja!
-          }
-        })
-      );
+    caches.keys().then(keys => {
+      return Promise.all(keys.map(key => { if (key !== CACHE_NAME) return caches.delete(key); }));
     }).then(() => {
       return caches.open(CACHE_NAME).then(cache => cache.addAll([
         './',
         './index.html',
-        './logo_lab_26.png?v=2'
+        './logo_lab_26.png?v=2',
+        './icono.png'
       ]));
     })
   );
 });
 
-// ACTIVACIÓN: Toma el control inmediatamente
 self.addEventListener('activate', event => {
+  // Toma control inmediato
   event.waitUntil(self.clients.claim());
 });
 
-// FUNCIONAMIENTO: Siempre busca el Excel fresh, el resto usa caché si no hay internet
 self.addEventListener('fetch', event => {
+  // 1. El Excel siempre fresco
   if (event.request.url.includes('docs.google') || event.request.url.includes('googleapis')) {
-    event.respondWith(fetch(event.request)); 
-  } else {
-    event.respondWith(
-      caches.match(event.request).then(response => {
-        return response || fetch(event.request); 
-      })
-    );
+    return fetch(event.request); 
   }
+  
+  // 2. EL ARREGLO: El index.html SIEMPRE buscalo fresco en internet para no volver a atascar colores
+  if (event.request.url.endsWith('index.html') || event.request.url.endsWith('/')) {
+    return fetch(event.request).then(response => {
+      // Lo guardamos en caché para el modo offline, pero primero mostramos el nuevo
+      const responseClone = response.clone();
+      caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+      return response;
+    }).catch(() => {
+      // Si no hay internet, mostramos el que tenemos guardado
+      return caches.match(event.request);
+    });
+  }
+  
+  // 3. El resto (logo, icono) usan caché normal
+  return caches.match(event.request).then(response => {
+    return response || fetch(event.request); 
+  });
 });
