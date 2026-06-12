@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        :root { --primary: #ffc000; --accent: #ff0040; --bg-1: '#010524'; --bg-2: '#020c42'; --bg-3: '#031678'; --glass-bg: rgba(3, 22, 120, 0.15); --glass-border: rgba(255, 192, 0, 0.3); }
+        :root { --primary: #ffc000; --accent: #ff0040; --bg-1: #010524; --bg-2: #020c42; --bg-3: #031678; --glass-bg: rgba(0, 20, 100, 0.15); --glass-border: rgba(0, 50, 150, 0.2); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #010524, #020c42, #031678); color: #fff; min-height: 100vh; padding: 15px; padding-bottom: 100px; transition: all 0.5s ease; }
         .app-container { max-width: 600px; margin: 0 auto; }
@@ -129,7 +129,7 @@
 
     function initOutfit() { let g = localStorage.getItem('lab26_outfit'); if(!g || !outfits[g]) g='tigosports'; document.getElementById('selector-outfit').value=g; aplicarCSS(g); }
     function cambiarOutfit(e) { localStorage.setItem('lab26_outfit', e); aplicarCSS(e); }
-    function aplicarCSS(e) { const o=outfits[e]; const r=document.documentElement.style; r.setProperty('--primary',o.p); r.setProperty('--bg-1',o.bg1); r.setProperty('--bg-2',o.bg2); r.setProperty('--bg-3',o.bg3); r.setProperty('--glass-bg',`rgba(${o.rgb}, 0.15)`); r.setProperty('--glass-border',`rgba(${o.rgb}, 0.3)`); }
+    function aplicarCSS(e) { const o=outfits[e]; const r=document.documentElement.style; r.setProperty('--primary',o.p); r.setProperty('--bg-1','#010524'); r.setProperty('--bg-2','#020c42'); r.setProperty('--bg-3','#031678'); r.setProperty('--glass-bg','rgba(0, 20, 100, 0.15)'); r.setProperty('--glass-border','rgba(0, 50, 150, 0.2)'); }
     initOutfit();
 
     const URL_SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS_W625S823fGRqWxPfro9r0tKV1nvgeR29B2VMHYDISEb2gqPlMzMCAlBEbFRSi0JNnrFfZo4939Xj/pub?output=csv';
