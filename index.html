@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        :root { --primary: #ffc000; --accent: #ff0040; --bg-1: '#010524'; --bg-2: '#020c42'; --bg-3: '#031678'; --glass-bg: rgba(3, 22, 120, 0.15); --glass-border: rgba(68, 138, 255, 0.3); }
+        :root { --primary: #ffc000; --accent: #ff0040; --bg-1: '#010524'; --bg-2: '#020c42'; --bg-3: '#031678'; --glass-bg: rgba(3, 22, 120, 0.15); --glass-border: rgba(255, 192, 0, 0.3); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #010524, #020c42, #031678); color: #fff; min-height: 100vh; padding: 15px; padding-bottom: 100px; transition: all 0.5s ease; }
         .app-container { max-width: 600px; margin: 0 auto; }
@@ -32,8 +32,8 @@
         .select-outfit option { color: #000; background: white; }
         .matches-container { border-top: 1px solid var(--glass-border); padding: 20px; min-height: 200px; border-radius: 0; }
         .loading { text-align: center; padding: 40px; opacity: 0.5; font-weight: 600; }
-        .error-msg { background: rgba(255,0,0,0.2); border: 1px solid red; padding: 15px; border-radius: 10px; font-size: 0.8rem; }
-        .proximo-partido { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-top: 4px solid var(--primary); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center; }
+        .error-msg { background: rgba(255,0,0,0.2); border: 1px solid red; padding: 15px; border-radius: 10px; font-size: 0.8rem; word-break: break-all;}
+        .proximo-partido { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-top: 4px solid var(--primary); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center; transition: all 0.5s ease; }
         .proximo-partido .fase-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 10px;}
         .proximo-partido .fecha-hora { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; font-weight: 600; }
         .proximo-partido .estadio-text { font-size: 0.75rem; opacity: 0.5; margin-bottom: 15px; font-weight: 400; }
@@ -50,7 +50,7 @@
         .fase-destacada { color: var(--primary); font-weight: 800; font-size: 0.8rem; margin-right: 5px; }
         .posiciones-container { padding: 20px; border-radius: 0 0 24px 24px; border-top: 1px solid var(--glass-border); }
         .grupo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .tabla-grupo { font-size: 0.75rem; background: rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
+        .tabla-grupo { font-size: 0.75rem; background: rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); transition: all 0.3s ease; }
         .tabla-grupo h3 { background: var(--primary); color: #000; padding: 8px; text-align: center; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         .tabla-grupo table { width: 100%; border-collapse: collapse; }
         .tabla-grupo th, .tabla-grupo td { padding: 8px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -86,7 +86,7 @@
                 <option value="francia">🇫🇷 Francia</option>
                 <option value="alemania">🇩🇪 Alemania</option>
                 <option value="inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</option>
-                <option value="holanda">🇳🇱 Holanda</option>
+                <option value="paisesbajos">🇳🇱 Países Bajos</option>
                 <option value="eeuu">🇺🇸 Estados Unidos</option>
                 <option value="uruguay">🇺🇾 Uruguay</option>
             </select>
@@ -114,7 +114,7 @@
 
 <script>
     const outfits = {
-        tigosports:{ p: '#ffc000', rgb: '3, 22, 120', bg1: '#010524', bg2: '#020c42', bg3: '#031678' },
+        tigosports:{ p: '#ffc000', rgb: '255, 192, 0', bg1: '#010524', bg2: '#020c42', bg3: '#031678' },
         argentina: { p: '#75AADB', rgb: '117, 170, 219', bg1: '#0a2540', bg2: '#0f3050', bg3: '#0a2a45' },
         brasil:    { p: '#FFDF00', rgb: '255, 223, 0',   bg1: '#0a2a00', bg2: '#154000', bg3: '#0f3300' },
         mexico:    { p: '#006847', rgb: '0, 104, 71',    bg1: '#0a1f15', bg2: '#0f2d1f', bg3: '#0a261a' },
@@ -122,14 +122,14 @@
         francia:   { p: '#002395', rgb: '0, 35, 149',    bg1: '#000a20', bg2: '#001035', bg3: '#000d2a' },
         alemania:  { p: '#FFFFFF', rgb: '255, 255, 255', bg1: '#0a0a0a', bg2: '#151515', bg3: '#101010' },
         inglaterra:{ p: '#CF081F', rgb: '207, 8, 31',    bg1: '#200005', bg2: '#30000a', bg3: '#280008' },
-        holanda:   { p: '#FF6600', rgb: '255, 102, 0',   bg1: '#2a1200', bg2: '#3d1a00', bg3: '#331500' },
+        paisesbajos:{ p: '#FF6600', rgb: '255, 102, 0',   bg1: '#2a1200', bg2: '#3d1a00', bg3: '#331500' },
         eeuu:      { p: '#002868', rgb: '0, 40, 104',    bg1: '#000815', bg2: '#001025', bg3: '#000a1c' },
         uruguay:   { p: '#5CADFF', rgb: '92, 173, 255',  bg1: '#0a1e35', bg2: '#0f2a45', bg3: '#0a233d' }
     };
 
     function initOutfit() { let g = localStorage.getItem('lab26_outfit'); if(!g || !outfits[g]) g='tigosports'; document.getElementById('selector-outfit').value=g; aplicarCSS(g); }
     function cambiarOutfit(e) { localStorage.setItem('lab26_outfit', e); aplicarCSS(e); }
-    function aplicarCSS(e) { const o=outfits[e]; const r=document.documentElement.style; r.setProperty('--primary',o.p); r.setProperty('--bg-1',o.bg1); r.setProperty('--bg-2',o.bg2); r.setProperty('--bg-3',o.bg3); r.setProperty('--glass-bg',`rgba(${o.rgb}, 0.15)`); r.setProperty('--glass-border',`rgba(68, 138, 255, 0.3)`); }
+    function aplicarCSS(e) { const o=outfits[e]; const r=document.documentElement.style; r.setProperty('--primary',o.p); r.setProperty('--bg-1',o.bg1); r.setProperty('--bg-2',o.bg2); r.setProperty('--bg-3',o.bg3); r.setProperty('--glass-bg',`rgba(${o.rgb}, 0.15)`); r.setProperty('--glass-border',`rgba(${o.rgb}, 0.3)`); }
     initOutfit();
 
     const URL_SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS_W625S823fGRqWxPfro9r0tKV1nvgeR29B2VMHYDISEb2gqPlMzMCAlBEbFRSi0JNnrFfZo4939Xj/pub?output=csv';
@@ -164,48 +164,27 @@
 
     function formatearFecha(fechaStr) { let d = new Date(fechaStr); return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }); }
 
-       function renderVista() {
+    function renderVista() {
         let htmlProximo = ''; let htmlPartidos = '';
-
         if (proximoPartidoId !== null) {
             let pp = partidos.find(p => p.id === proximoPartidoId);
             let clickProx = pp.grupo ? `onclick="irAPosiciones('${pp.grupo}')"` : '';
             let cursorProx = pp.grupo ? 'cursor: pointer;' : '';
-            htmlProximo = `
-                <div class="proximo-partido" style="${cursorProx}" ${clickProx}>
-                    <div class="fase-label">Próximo Partido - ${pp.fase}</div>
-                    <div class="fecha-hora">${pp.fechaStr}</div>
-                    <div class="estadio-text">📍 ${pp.estadio}</div>
-                    <div class="equipos">
-                        <span>${pp.local}</span>
-                        <span class="vs">VS</span>
-                        <span>${pp.visitante}</span>
-                    </div>
-                </div>`;
+            htmlProximo = `<div class="proximo-partido" style="${cursorProx}" ${clickProx}><div class="fase-label">Próximo Partido - ${pp.fase}</div><div class="fecha-hora">${pp.fechaStr}</div><div class="estadio-text">📍 ${pp.estadio}</div><div class="equipos"><span>${pp.local}</span><span class="vs">VS</span><span>${pp.visitante}</span></div></div>`;
         }
-
         htmlPartidos += '<div class="titulo-seccion">⚽ Fixture Completo</div>';
         for (let p of partidos) {
             let estadoClase = p.jugado ? 'match-card jugado' : 'match-card pendiente';
             let resultado = p.jugado ? `${p.gl} - ${p.gv}` : '- ';
-            
-            // LA MAGIA: Si tiene grupo, le ponemos la acción de ir a la tabla
             let clickAction = p.grupo ? `onclick="irAPosiciones('${p.grupo}')"` : '';
             let cursorStyle = p.grupo ? 'cursor: pointer;' : '';
-            
-            htmlPartidos += `
-                <div class="${estadoClase}" style="${cursorStyle}" ${clickAction}>
-                    <div class="match-info">
-                        <div class="match-equipos">${p.local} <span class="match-resultado">${resultado}</span> ${p.visitante}</div>
-                        <div class="match-fecha"><span class="fase-destacada">${p.fase}</span> | ${p.fechaStr} | ${p.estadio}</div>
-                    </div>
-                </div>`;
+            htmlPartidos += `<div class="${estadoClase}" style="${cursorStyle}" ${clickAction}><div class="match-info"><div class="match-equipos">${p.local} <span class="match-resultado">${resultado}</span> ${p.visitante}</div><div class="match-fecha"><span class="fase-destacada">${p.fase}</span> | ${p.fechaStr} | ${p.estadio}</div></div></div>`;
         }
         document.getElementById('contenedor-partidos').innerHTML = htmlProximo + htmlPartidos;
         renderPosiciones();
     }
 
-        function renderPosiciones() {
+    function renderPosiciones() {
         const grupos = {}; const ordenGrupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
         ordenGrupos.forEach(g => grupos[g] = []);
         partidos.filter(p => p.jugado && p.grupo !== null).forEach(p => { agregarResultado(grupos[p.grupo], p.localLimpio, p.local, p.gl, p.gv); agregarResultado(grupos[p.grupo], p.visitLimpio, p.visitante, p.gv, p.gl); });
@@ -219,8 +198,6 @@
         ordenGrupos.forEach(nombreGrupo => {
             let equipos = grupos[nombreGrupo]; if(equipos.length === 0) return;
             equipos.sort((a, b) => { if (b.pts !== a.pts) return b.pts - a.pts; return (b.gf - b.gc) - (a.gf - a.gc); });
-            
-            // Se agregó el id="grupo-${nombreGrupo}" acá:
             html += `<div id="grupo-${nombreGrupo}" class="tabla-grupo"><h3>Grupo ${nombreGrupo}</h3><table><tr><th>#</th><th>Equipo</th><th>Pts</th><th>DG</th></tr>`;
             equipos.forEach((eq, index) => { let dg = eq.gf - eq.gc; let claseCss = ''; if (index < 2) { claseCss = 'clasificado'; } else if (index === 2 && mejoresTerceros.has(eq.nombre)) { claseCss = 'clasificado-tercero'; } html += `<tr class="${claseCss}"><td>${index + 1}</td><td class="equipo">${eq.nombreCompleto}</td><td><strong>${eq.pts}</strong></td><td>${dg > 0 ? '+'+dg : dg}</td></tr>`; });
             html += '</table></div>';
@@ -228,10 +205,29 @@
         html += '</div>';
         document.getElementById('contenedor-posiciones').innerHTML = html;
     }
+
     function agregarResultado(arrGrupo, nombreLimpio, nombreCompleto, gf, gc) {
         let equipo = arrGrupo.find(e => e.nombre === nombreLimpio);
         if (!equipo) { arrGrupo.push({ nombre: nombreLimpio, nombreCompleto: nombreCompleto, pts: 0, pj: 0, gf: 0, gc: 0 }); equipo = arrGrupo.find(e => e.nombre === nombreLimpio); }
         equipo.pj++; equipo.gf += gf; equipo.gc += gc; if (gf > gc) equipo.pts += 3; else if (gf === gc) equipo.pts += 1;
+    }
+
+    function irAPosiciones(grupo) {
+        const tabla = document.getElementById(`grupo-${grupo}`);
+        if (tabla) {
+            tabla.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            setTimeout(() => {
+                tabla.style.transform = 'scale(1.05)';
+                tabla.style.boxShadow = '0 0 25px var(--primary)';
+                tabla.style.transition = 'all 0.3s ease';
+                tabla.style.zIndex = '10';
+                setTimeout(() => {
+                    tabla.style.transform = 'scale(1)';
+                    tabla.style.boxShadow = 'none';
+                    tabla.style.zIndex = '1';
+                }, 2000);
+            }, 400);
+        }
     }
 
     function toggleQR() { const m = document.getElementById('qr-modal'); m.classList.add('active'); if(!qrCreado) { new QRCode(document.getElementById('qr-code'), { text: window.location.href, width: 180, height: 180, colorDark : "#000000", colorLight : "#ffffff" }); qrCreado = true; } }
