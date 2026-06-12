@@ -1,189 +1,80 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-        <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-S7MX233BPC');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fixture 26</title>
-        <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0055FF">
+    
+    <!-- PEGA AQUÍ TU CÓDIGO DE GOOGLE ANALYTICS SI LO TENÉS -->
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#ffc000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="icono.png">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
     <style>
-        :root {
-            --primary: #448AFF;  
-            --accent: #ff0040;
-            --bg-1: #001533;
-            --bg-2: #002266;
-            --bg-3: #001a4d;
-            --glass-bg: rgba(0, 85, 255, 0.1); 
-            --glass-border: rgba(0, 85, 255, 0.2);
-        }
-        
+        :root { --primary: #ffc000; --accent: #ff0040; --bg-1: '#010524'; --bg-2: '#020c42'; --bg-3: '#031678'; --glass-bg: rgba(3, 22, 120, 0.15); --glass-border: rgba(68, 138, 255, 0.3); }
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            background: linear-gradient(160deg, var(--bg-1), var(--bg-2), var(--bg-3)); 
-            color: #ffffff; 
-            min-height: 100vh; 
-            padding: 15px; 
-            padding-bottom: 100px; 
-            transition: all 0.5s ease;
-        }
-        
+        body { font-family: 'Inter', sans-serif; background: linear-gradient(160deg, #010524, #020c42, #031678); color: #fff; min-height: 100vh; padding: 15px; padding-bottom: 100px; transition: all 0.5s ease; }
         .app-container { max-width: 600px; margin: 0 auto; }
-        
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-            transition: all 0.5s ease;
-        }
-        
+        .glass { background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid var(--glass-border); box-shadow: 0 8px 32px 0 rgba(0,0,0,0.4); transition: all 0.5s ease; }
         .header { padding: 30px 25px; border-radius: 24px 24px 0 0; text-align: center; border-bottom: none; }
         .app-logo { max-width: 180px; width: 100%; height: auto; margin-bottom: 20px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
-        
         .outfit-selector { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
         .outfit-selector label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; opacity: 0.8; }
-        
-        .select-outfit { 
-            background: rgba(0,0,0,0.3); color: var(--primary); border: 2px solid var(--primary);
-            padding: 8px 15px; border-radius: 30px; font-weight: 800; cursor: pointer; outline: none; font-family: inherit;
-            transition: all 0.3s ease;
-        }
+        .select-outfit { background: rgba(0,0,0,0.3); color: var(--primary); border: 2px solid var(--primary); padding: 8px 15px; border-radius: 30px; font-weight: 800; cursor: pointer; outline: none; font-family: inherit; transition: all 0.3s ease; }
         .select-outfit option { color: #000; background: white; }
-
         .matches-container { border-top: 1px solid var(--glass-border); padding: 20px; min-height: 200px; border-radius: 0; }
         .loading { text-align: center; padding: 40px; opacity: 0.5; font-weight: 600; }
-        .error-msg { background: rgba(255,0,0,0.2); border: 1px solid red; padding: 15px; border-radius: 10px; font-size: 0.8rem; word-break: break-all;}
-        
-        /* Próximo Partido */
-        .proximo-partido { 
-            background: rgba(0, 0, 0, 0.2); border: 1px solid var(--glass-border); border-top: 4px solid var(--primary); border-radius: 16px; padding: 25px; margin-bottom: 25px; 
-            text-align: center; transition: all 0.5s ease;
-        }
+        .error-msg { background: rgba(255,0,0,0.2); border: 1px solid red; padding: 15px; border-radius: 10px; font-size: 0.8rem; }
+        .proximo-partido { background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-top: 4px solid var(--primary); border-radius: 16px; padding: 25px; margin-bottom: 25px; text-align: center; }
         .proximo-partido .fase-label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; color: var(--primary); margin-bottom: 10px;}
         .proximo-partido .fecha-hora { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; font-weight: 600; }
         .proximo-partido .estadio-text { font-size: 0.75rem; opacity: 0.5; margin-bottom: 15px; font-weight: 400; }
         .proximo-partido .equipos { display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 1.3rem; font-weight: 800; flex-wrap: wrap;}
         .proximo-partido .vs { font-size: 0.9rem; opacity: 0.3; font-weight: 400; color: white; }
-        
-        /* Partidos */
-        .titulo-seccion { font-size: 1rem; font-weight: 800; margin: 25px 0 15px 0; border-bottom: 2px solid var(--primary); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; color: var(--primary); transition: all 0.5s ease;}
-        
-        .match-card { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 15px; background: rgba(0, 0, 0, 0.15); 
-            border-radius: 12px; margin-bottom: 10px; border-left: 4px solid rgba(255,255,255,0.1); transition: all 0.3s ease;
-        }
-        .match-card:hover { background: rgba(0, 0, 0, 0.25); transform: translateX(3px); }
+        .titulo-seccion { font-size: 1rem; font-weight: 800; margin: 25px 0 15px 0; border-bottom: 2px solid var(--primary); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; color: var(--primary); }
+        .match-card { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.15); border-radius: 12px; margin-bottom: 10px; border-left: 4px solid rgba(255,255,255,0.1); }
+        .match-card:hover { background: rgba(0,0,0,0.25); transform: translateX(3px); }
         .match-card.jugado { border-left-color: #00cc66; }
         .match-card.pendiente { border-left-color: var(--primary); }
-        
-        /* AJUSTE DE ESPACIO PARA NOMBRES LARGOS Y MARCADORES */
-        .match-equipos { 
-            font-weight: 700; 
-            font-size: 0.85rem; /* Reducido para dar espacio */
-            display: flex; 
-            align-items: center; 
-            justify-content: center; /* Centra si hay salto de línea */
-            flex-wrap: wrap; /* Permite que el marcador baje si no hay espacio */
-            gap: 4px; 
-        }
-        
-        .match-resultado { 
-            font-weight: 800; 
-            font-size: 1rem; 
-            color: var(--primary); 
-            margin: 0 6px; /* Márgenes reducidos */
-            min-width: 45px; /* ESPACIO PROTEGIDO: Siempre hay lugar para "10 - 10" */
-            text-align: center; 
-            transition: all 0.5s ease; 
-            display: inline-block;
-        }
-
+        .match-equipos { font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 4px; }
+        .match-resultado { font-weight: 800; font-size: 1rem; color: var(--primary); margin: 0 6px; min-width: 45px; text-align: center; display: inline-block; }
         .match-fecha { font-size: 0.7rem; opacity: 0.6; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.5px; text-align: center;}
-        
-        .fase-destacada { 
-            color: var(--primary); 
-            font-weight: 800; 
-            font-size: 0.8rem;
-            margin-right: 5px;
-            transition: color 0.5s ease;
-        }
-
-        /* Tabla de Posiciones */
+        .fase-destacada { color: var(--primary); font-weight: 800; font-size: 0.8rem; margin-right: 5px; }
         .posiciones-container { padding: 20px; border-radius: 0 0 24px 24px; border-top: 1px solid var(--glass-border); }
         .grupo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        
         .tabla-grupo { font-size: 0.75rem; background: rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); }
-        .tabla-grupo h3 { background: var(--primary); color: #000; padding: 8px; text-align: center; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: background 0.5s ease; }
+        .tabla-grupo h3 { background: var(--primary); color: #000; padding: 8px; text-align: center; font-size: 0.85rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
         .tabla-grupo table { width: 100%; border-collapse: collapse; }
         .tabla-grupo th, .tabla-grupo td { padding: 8px 5px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .tabla-grupo th { font-size: 0.6rem; opacity: 0.5; text-transform: uppercase; color: white; }
         .tabla-grupo td.equipo { text-align: left; font-weight: 600; padding-left: 10px; }
         .tabla-grupo tr.clasificado td { color: #00ff88; font-weight: 700;}
+        .tabla-grupo tr.clasificado { background-color: rgba(0, 255, 136, 0.05); }
         .tabla-grupo tr.clasificado-tercero td { color: #FFD700; font-weight: 700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.5);}
         .tabla-grupo tr.clasificado-tercero { background-color: rgba(255, 215, 0, 0.05); }
-        .tabla-grupo tr.clasificado { background-color: rgba(0, 255, 136, 0.05); }
-        
-        /* Botón Flotante QR */
-        .fab-qr {
-            position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px;
-            background: var(--primary); color: #000000; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000;
-            transition: all 0.3s ease; border: none;
-        }
-        .fab-qr:hover { transform: scale(1.1); }
+        .fab-qr { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background: var(--primary); color: #000; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); cursor: pointer; z-index: 1000; border: none; }
         .fab-qr svg { width: 30px; height: 30px; fill: currentColor; }
-
-        /* Ventana Modal QR */
-        .qr-modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000;
-            justify-content: center; align-items: center;
-        }
+        .qr-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 2000; justify-content: center; align-items: center; }
         .qr-modal.active { display: flex; }
-        .qr-modal-content {
-            background: white; padding: 30px; border-radius: 24px; text-align: center;
-            color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); animation: popIn 0.3s ease;
-        }
+        .qr-modal-content { background: white; padding: 30px; border-radius: 24px; text-align: center; color: #333; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
         .qr-modal-content h3 { margin-bottom: 20px; font-size: 1.1rem; color: #111; }
         .qr-modal-content p { margin-top: 15px; font-size: 0.75rem; color: #888; }
-        
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        @media (max-width: 400px) {
-            .grupo-grid { grid-template-columns: 1fr; }
-            .proximo-partido .equipos { font-size: 1.1rem; gap: 8px; }
-        }
+        @media (max-width: 400px) { .grupo-grid { grid-template-columns: 1fr; } .proximo-partido .equipos { font-size: 1.1rem; gap: 8px; } }
     </style>
 </head>
 <body>
 
 <div class="app-container">
     <div class="header glass">
-        <img src="logo_lab_26.png?v=2" alt="LAB 26 Logo" class="app-logo">
+        <img src="logo_lab_26.png?v=2" alt="TIGO SPORTS Logo" class="app-logo">
         <div class="outfit-selector">
             <label>Viste tu app:</label>
             <select class="select-outfit" id="selector-outfit" onchange="cambiarOutfit(this.value)">
@@ -195,7 +86,7 @@
                 <option value="francia">🇫🇷 Francia</option>
                 <option value="alemania">🇩🇪 Alemania</option>
                 <option value="inglaterra">🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra</option>
-                <option value="holanda">🇳🇱 Paises Bajos</option>
+                <option value="holanda">🇳🇱 Holanda</option>
                 <option value="eeuu">🇺🇸 Estados Unidos</option>
                 <option value="uruguay">🇺🇾 Uruguay</option>
             </select>
@@ -209,14 +100,10 @@
     <div class="posiciones-container glass" id="contenedor-posiciones"></div>
 </div>
 
-<!-- Botón Flotante QR -->
 <button class="fab-qr" onclick="toggleQR()">
-    <svg viewBox="0 0 24 24">
-        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM17 17h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2zM17 13h2v2h-2zM19 15h2v2h-2z"/>
-    </svg>
+    <svg viewBox="0 0 24 24"><path d="M3 11h8V3H3v8zm2-6h4v4H5V5zM3 21h8v-8H3v8zm2-6h4v4H5v-4zM13 3v8h8V3h-8zm6 6h-4V5h4v4zM13 13h2v2h-2zM15 15h2v2h-2zM13 17h2v2h-2zM17 17h2v2h-2zM15 19h2v2h-2zM19 19h2v2h-2zM17 13h2v2h-2zM19 15h2v2h-2z"/></svg>
 </button>
 
-<!-- Ventana Emergente QR -->
 <div class="qr-modal" id="qr-modal" onclick="cerrarQR(event)">
     <div class="qr-modal-content">
         <h3>Compartir con amigos</h3>
@@ -227,7 +114,7 @@
 
 <script>
     const outfits = {
-        tigosports:{ p: '#448AFF', rgb: '3, 22, 120',    bg1: '#010524', bg2: '#020c42', bg3: '#031678' },
+        tigosports:{ p: '#ffc000', rgb: '3, 22, 120', bg1: '#010524', bg2: '#020c42', bg3: '#031678' },
         argentina: { p: '#75AADB', rgb: '117, 170, 219', bg1: '#0a2540', bg2: '#0f3050', bg3: '#0a2a45' },
         brasil:    { p: '#FFDF00', rgb: '255, 223, 0',   bg1: '#0a2a00', bg2: '#154000', bg3: '#0f3300' },
         mexico:    { p: '#006847', rgb: '0, 104, 71',    bg1: '#0a1f15', bg2: '#0f2d1f', bg3: '#0a261a' },
@@ -240,83 +127,44 @@
         uruguay:   { p: '#5CADFF', rgb: '92, 173, 255',  bg1: '#0a1e35', bg2: '#0f2a45', bg3: '#0a233d' }
     };
 
-    function initOutfit() {
-        let guardado = localStorage.getItem('lab26_outfit');
-        if (!guardado || !outfits[guardado]) { guardado = 'tigosports'; document.getElementById('selector-outfit').value = 'tigosports'; }
-        aplicarCSS(guardado);
-    }
-    function cambiarOutfit(equipo) { localStorage.setItem('lab26_outfit', equipo); aplicarCSS(equipo); }
-    function aplicarCSS(equipo) {
-        const o = outfits[equipo]; const root = document.documentElement.style;
-        root.setProperty('--primary', o.p); root.setProperty('--bg-1', o.bg1); root.setProperty('--bg-2', o.bg2); root.setProperty('--bg-3', o.bg3);
-        root.setProperty('--glass-bg', `rgba(${o.rgb}, 0.1)`);
-        root.setProperty('--glass-border', `rgba(${o.rgb}, 0.2)`);
-    }
+    function initOutfit() { let g = localStorage.getItem('lab26_outfit'); if(!g || !outfits[g]) g='tigosports'; document.getElementById('selector-outfit').value=g; aplicarCSS(g); }
+    function cambiarOutfit(e) { localStorage.setItem('lab26_outfit', e); aplicarCSS(e); }
+    function aplicarCSS(e) { const o=outfits[e]; const r=document.documentElement.style; r.setProperty('--primary',o.p); r.setProperty('--bg-1',o.bg1); r.setProperty('--bg-2',o.bg2); r.setProperty('--bg-3',o.bg3); r.setProperty('--glass-bg',`rgba(${o.rgb}, 0.15)`); r.setProperty('--glass-border',`rgba(68, 138, 255, 0.3)`); }
     initOutfit();
 
     const URL_SHEET = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS_W625S823fGRqWxPfro9r0tKV1nvgeR29B2VMHYDISEb2gqPlMzMCAlBEbFRSi0JNnrFfZo4939Xj/pub?output=csv';
     const COL = { FASE: 0, LOCAL: 1, BANDERA_LOCAL: 2, VISITANTE: 3, BANDERA_VISIT: 4, FECHA: 5, ESTADIO: 6, GL: 7, GV: 8 };
 
-    let partidos = [];
-    let proximoPartidoId = null;
-    let qrCreado = false;
+    let partidos = []; let proximoPartidoId = null; let qrCreado = false;
 
-    fetch(URL_SHEET)
-        .then(res => { if (!res.ok) throw new Error("Error de red: " + res.status); return res.text(); })
-        .then(data => { procesarDatosCSV(data); renderVista(); })
-        .catch(err => {
-            document.getElementById('contenedor-partidos').innerHTML = `<div class="error-msg"><strong>Ocurrió un problema:</strong><br><br>${err.message}<br><br><small>(Copiá este texto y mandalo al dev)</small></div>`;
-        });
+    fetch(URL_SHEET).then(res => { if (!res.ok) throw new Error("Error de red: " + res.status); return res.text(); }).then(data => { procesarDatosCSV(data); renderVista(); }).catch(err => { document.getElementById('contenedor-partidos').innerHTML = `<div class="error-msg"><strong>Ocurrió un problema:</strong><br><br>${err.message}</div>`; });
 
-    function parsearLineaCSV(linea) {
-        const resultado = []; let estadoActual = 0; let valorActual = '';
-        for (let i = 0; i < linea.length; i++) {
-            let caracter = linea[i];
-            if (caracter === '"') {
-                if (estadoActual === 1 && linea[i+1] === '"') { valorActual += '"'; i++; }
-                else { estadoActual = (estadoActual === 0) ? 1 : 0; }
-            } else if (caracter === ',' && estadoActual === 0) {
-                resultado.push(valorActual.trim()); valorActual = '';
-            } else { valorActual += caracter; }
-        }
-        resultado.push(valorActual.trim()); return resultado;
-    }
+    function parsearLineaCSV(linea) { const r = []; let s = 0; let v = ''; for (let i = 0; i < linea.length; i++) { let c = linea[i]; if (c === '"') { if (s === 1 && linea[i+1] === '"') { v += '"'; i++; } else { s = (s === 0) ? 1 : 0; } } else if (c === ',' && s === 0) { r.push(v.trim()); v = ''; } else { v += c; } } r.push(v.trim()); return r; }
 
     function procesarDatosCSV(texto) {
         const filas = texto.trim().split(/\r?\n/);
         for (let i = 1; i < filas.length; i++) {
             let col = parsearLineaCSV(filas[i]);
             if(!col[COL.FECHA]) continue;
-            
             let nombreLocal = col[COL.BANDERA_LOCAL] + ' ' + col[COL.LOCAL];
             let nombreVisitante = col[COL.BANDERA_VISIT] + ' ' + col[COL.VISITANTE];
             let faseOriginal = col[COL.FASE].trim(); 
             let grupo = faseOriginal.includes('GRUPO') ? faseOriginal.replace('GRUPO ', '') : null;
-
             let glStr = col[COL.GL] ? col[COL.GL].trim() : '';
             let gvStr = col[COL.GV] ? col[COL.GV].trim() : '';
             let gl = glStr !== '' ? parseInt(glStr) : null;
             let gv = gvStr !== '' ? parseInt(gvStr) : null;
             let jugado = (gl !== null && gv !== null && !isNaN(gl) && !isNaN(gv) && gl >= 0 && gv >= 0);
             let fechaDate = new Date(col[COL.FECHA]);
-            
-            partidos.push({ 
-                fecha: fechaDate, fechaStr: formatearFecha(col[COL.FECHA]), estadio: col[COL.ESTADIO], 
-                fase: faseOriginal, grupo: grupo,
-                local: nombreLocal, localLimpio: col[COL.LOCAL], gl: gl, 
-                visitante: nombreVisitante, visitLimpio: col[COL.VISITANTE], gv: gv, jugado: jugado, id: i 
-            });
+            partidos.push({ fecha: fechaDate, fechaStr: formatearFecha(col[COL.FECHA]), estadio: col[COL.ESTADIO], fase: faseOriginal, grupo: grupo, local: nombreLocal, localLimpio: col[COL.LOCAL], gl: gl, visitante: nombreVisitante, visitLimpio: col[COL.VISITANTE], gv: gv, jugado: jugado, id: i });
         }
         partidos.sort((a, b) => a.fecha - b.fecha);
         for (let p of partidos) { if (!p.jugado) { proximoPartidoId = p.id; break; } }
     }
 
-    function formatearFecha(fechaStr) {
-        let d = new Date(fechaStr);
-        return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false });
-    }
+    function formatearFecha(fechaStr) { let d = new Date(fechaStr); return d.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }); }
 
-        function renderVista() {
+       function renderVista() {
         let htmlProximo = ''; let htmlPartidos = '';
 
         if (proximoPartidoId !== null) {
@@ -357,26 +205,7 @@
         renderPosiciones();
     }
 
-        htmlPartidos += '<div class="titulo-seccion">⚽ Fixture Completo</div>';
-        for (let p of partidos) {
-            let estadoClase = p.jugado ? 'match-card jugado' : 'match-card pendiente';
-            let resultado = p.jugado ? `${p.gl} - ${p.gv}` : '- ';
-            
-            htmlPartidos += `
-                <div class="${estadoClase}">
-                    <div class="match-info">
-                        <div class="match-equipos">${p.local} <span class="match-resultado">${resultado}</span> ${p.visitante}</div>
-                        <div class="match-fecha">
-                            <span class="fase-destacada">${p.fase}</span> | ${p.fechaStr} | ${p.estadio}
-                        </div>
-                    </div>
-                </div>`;
-        }
-        document.getElementById('contenedor-partidos').innerHTML = htmlProximo + htmlPartidos;
-        renderPosiciones();
-    }
-
-    function renderPosiciones() {
+        function renderPosiciones() {
         const grupos = {}; const ordenGrupos = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L'];
         ordenGrupos.forEach(g => grupos[g] = []);
         partidos.filter(p => p.jugado && p.grupo !== null).forEach(p => { agregarResultado(grupos[p.grupo], p.localLimpio, p.local, p.gl, p.gv); agregarResultado(grupos[p.grupo], p.visitLimpio, p.visitante, p.gv, p.gl); });
@@ -399,79 +228,17 @@
         html += '</div>';
         document.getElementById('contenedor-posiciones').innerHTML = html;
     }
-            }
-        });
-
-        // Ordenamos a todos los terceros entre sí usando las reglas de la FIFA
-        todosLosTerceros.sort((a, b) => {
-            if (b.pts !== a.pts) return b.pts - a.pts; // 1. Más puntos
-            let difB = b.gf - b.gc; let difA = a.gf - a.gc;
-            if (difB !== difA) return difB - difA; // 2. Mejor diferencia de gol
-            if (b.gf !== a.gf) return b.gf - a.gf; // 3. Más goles a favor
-            return 0; // (Si empatan todo, la FIFA sorts cards, pero aquí dejamos empate)
-        });
-
-        // Guardamos los nombres de los 8 mejores terceros
-        for(let i = 0; i < Math.min(8, todosLosTerceros.length); i++) {
-            mejoresTerceros.add(todosLosTerceros[i].nombre);
-        }
-
-        // 3. DIBUJAMOS LAS TABLAS EN PANTALLA
-        let html = '<div class="titulo-seccion">🏆 Posiciones <span style="font-size:0.7rem; opacity:0.7">(🟢 Directo | 🟡 Mejor 3ro)</span></div><div class="grupo-grid">';
-        
-        ordenGrupos.forEach(nombreGrupo => {
-            let equipos = grupos[nombreGrupo];
-            if(equipos.length === 0) return; // No mostramos grupos vacíos
-            
-            equipos.sort((a, b) => { if (b.pts !== a.pts) return b.pts - a.pts; return (b.gf - b.gc) - (a.gf - a.gc); });
-
-            html += `<div class="tabla-grupo"><h3>Grupo ${nombreGrupo}</h3><table><tr><th>#</th><th>Equipo</th><th>Pts</th><th>DG</th></tr>`;
-            equipos.forEach((eq, index) => {
-                let dg = eq.gf - eq.gc; 
-                let claseCss = '';
-                
-                // Lógica de colores
-                if (index < 2) {
-                    claseCss = 'clasificado'; // Verde para 1ro y 2do
-                } else if (index === 2 && mejoresTerceros.has(eq.nombre)) {
-                    claseCss = 'clasificado-tercero'; // Amarillo para el mejor 3ro
-                }
-                
-                html += `<tr class="${claseCss}"><td>${index + 1}</td><td class="equipo">${eq.nombreCompleto}</td><td><strong>${eq.pts}</strong></td><td>${dg > 0 ? '+'+dg : dg}</td></tr>`;
-            });
-            html += '</table></div>';
-        });
-        html += '</div>';
-        document.getElementById('contenedor-posiciones').innerHTML = html;
-    }
-
     function agregarResultado(arrGrupo, nombreLimpio, nombreCompleto, gf, gc) {
         let equipo = arrGrupo.find(e => e.nombre === nombreLimpio);
         if (!equipo) { arrGrupo.push({ nombre: nombreLimpio, nombreCompleto: nombreCompleto, pts: 0, pj: 0, gf: 0, gc: 0 }); equipo = arrGrupo.find(e => e.nombre === nombreLimpio); }
-        equipo.pj++; equipo.gf += gf; equipo.gc += gc;
-        if (gf > gc) equipo.pts += 3; else if (gf === gc) equipo.pts += 1;
+        equipo.pj++; equipo.gf += gf; equipo.gc += gc; if (gf > gc) equipo.pts += 3; else if (gf === gc) equipo.pts += 1;
     }
 
-    // --- LÓGICA DEL MODAL QR ---
-    function toggleQR() {
-        const modal = document.getElementById('qr-modal');
-        modal.classList.add('active');
-        if (!qrCreado) {
-            new QRCode(document.getElementById('qr-code'), { text: window.location.href, width: 180, height: 180, colorDark : "#000000", colorLight : "#ffffff" });
-            qrCreado = true;
-        }
-    }
+    function toggleQR() { const m = document.getElementById('qr-modal'); m.classList.add('active'); if(!qrCreado) { new QRCode(document.getElementById('qr-code'), { text: window.location.href, width: 180, height: 180, colorDark : "#000000", colorLight : "#ffffff" }); qrCreado = true; } }
+    function cerrarQR(e) { if (e.target.id === 'qr-modal') document.getElementById('qr-modal').classList.remove('active'); }
 
-    function cerrarQR(event) {
-        if (event.target.id === 'qr-modal') {
-            document.getElementById('qr-modal').classList.remove('active');
-        }
-    }
+    if('serviceWorker' in navigator) { navigator.serviceWorker.register('sw.js').catch(() => {}); }
 </script>
-    <script>
-        if('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {});
-        }
-    </script>
+
 </body>
 </html>
